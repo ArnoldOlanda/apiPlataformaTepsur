@@ -9,6 +9,7 @@ import { Alumno } from "../../Student/entity";
 import { Matricula } from "../entity";
 import { MatriculaEspecilizacionService } from "../../Especializacion/services/matriculaEspecializacion.service";
 import { DatabaseErrorBase } from "../../errors/DatabaseErrorBase";
+import { formatDate, getDateFormatWH } from "../helpers/formatDate";
 
 const gradoEstudioService = new GradoEstudiosService();
 const matriculaService = new MatriculaService();
@@ -224,9 +225,17 @@ export class MatriculaController {
             matricula = await matriculaService.matriculaDataForPDF(id);
             if (!matricula) {
                 const data = await matriculaEspeService.findByUuid(id);
-                return res.render("matriculaEspecializacion", data);
+                return res.render("matriculaEspecializacion", {
+                    ...data,
+                    fecha_inscripcion: getDateFormatWH(data.fecha_inscripcion),
+                });
             } else {
-                return res.render("matricula", matricula);
+                return res.render("matricula", {
+                    ...matricula,
+                    fecha_inscripcion: getDateFormatWH(
+                        matricula.fecha_inscripcion
+                    ),
+                });
             }
         } catch (error) {
             console.log(error);
@@ -246,9 +255,7 @@ export class MatriculaController {
                 .parseSync();
 
             if (!!argv.develop) host = "http://localhost:5000/api";
-            else
-                host =
-                    "https://apiplataformatepsur-production.up.railway.app/api";
+            else host = "https://plataformatepsur.up.railway.app/api";
 
             const url = `${host}/matricula/generate-ficha/${req.params.id}`;
             const pdfBuffer = await generatePDF({ url });
