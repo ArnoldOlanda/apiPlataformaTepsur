@@ -1,11 +1,10 @@
 import path from "path";
+import { v4 as uuid } from "uuid";
 import { Matricula } from "../../Matricula/entity";
 import { NotFoundError } from "../../errors/NotFoundError";
-import { deleteImage } from "../../helpers/deleteImage";
-import { uploadFile } from "../../helpers/uploadFile";
+import { deleteImage, uploadFile, uploadImage } from "../../helpers";
 import { CreateCertificadoDto } from "../dto/createCertificado.dto";
 import { Certificado } from "../entity/Certificado.entity";
-import { v4 as uuid } from "uuid";
 
 interface CertificadoRepository {
     register: (d: CreateCertificadoDto) => Promise<Certificado>;
@@ -22,36 +21,39 @@ export class CertificadoService implements CertificadoRepository {
             const nombreCortado = file.name.split(".");
             const extension = nombreCortado[nombreCortado.length - 1];
 
-            const nombreTemp = uuid() + "." + extension;
-            const uploadPath = path.join(
-                __dirname,
-                "../../../uploads/",
-                nombreTemp
-            );
-            console.log(uploadPath);
-            file.mv(uploadPath, (err) => {
-                if (err) {
-                    throw err;
-                }
-                uploadFile(uploadPath, "tepsur");
-            });
-            // const matricula = await Matricula.findOneBy({
-            //     uuid: matriculaUuid,
+            // const nombreTemp = uuid() + "." + extension;
+            // const uploadPath = path.join(
+            //     __dirname,
+            //     "../../../uploads/",
+            //     nombreTemp
+            // );
+            // console.log(uploadPath);
+            // file.mv(uploadPath, (err) => {
+            //     if (err) {
+            //         throw err;
+            //     }
+            //     uploadFile(uploadPath, "tepsur");
             // });
-            // if (!matricula) throw new NotFoundError("La matricula no existe");
+            const matricula = await Matricula.findOneBy({
+                uuid: matriculaUuid,
+            });
+            if (!matricula) throw new NotFoundError("La matricula no existe");
 
-            // const newCertificado = new Certificado();
-            // newCertificado.uuid = uuid();
-            // newCertificado.descripcion = descripcion;
+            const newCertificado = new Certificado();
+            newCertificado.uuid = uuid();
+            newCertificado.descripcion = descripcion;
 
-            // newCertificado.url =
-            //     "aqui va la url del archivo guardado en azure :v";
-            // newCertificado.matricula = matricula;
+            newCertificado.url = await uploadImage(
+                undefined,
+                file,
+                "certificados"
+            );
+            newCertificado.matricula = matricula;
 
-            // await newCertificado.save();
+            await newCertificado.save();
 
-            // return newCertificado;
-            return "true";
+            return newCertificado;
+            // return "true";
         } catch (error) {
             throw error;
         }
