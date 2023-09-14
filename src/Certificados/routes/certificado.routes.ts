@@ -75,8 +75,8 @@ router.post(
     [
         validateJWT,
         checkAuthRole([ROLES.ROOT, ROLES.ADMIN, ROLES.SECRE]),
-        body("descripcion").isString(),
-        body("matriculaUuid").isUUID(4),
+        // body("descripcion").isString(),
+        // body("matriculaUuid").isUUID(4),
         // body("image").exists(),
         validateFields,
     ],

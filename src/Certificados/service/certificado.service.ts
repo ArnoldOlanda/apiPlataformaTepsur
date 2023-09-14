@@ -1,7 +1,8 @@
+import path from "path";
 import { Matricula } from "../../Matricula/entity";
 import { NotFoundError } from "../../errors/NotFoundError";
 import { deleteImage } from "../../helpers/deleteImage";
-import { uploadImage } from "../../helpers/uploadImage";
+import { uploadFile } from "../../helpers/uploadFile";
 import { CreateCertificadoDto } from "../dto/createCertificado.dto";
 import { Certificado } from "../entity/Certificado.entity";
 import { v4 as uuid } from "uuid";
@@ -15,29 +16,42 @@ interface CertificadoRepository {
 }
 
 export class CertificadoService implements CertificadoRepository {
-    public register = async (
-        data: CreateCertificadoDto
-    ): Promise<Certificado> => {
+    public register = async (data: CreateCertificadoDto): Promise<any> => {
         try {
-            const { descripcion, image, matriculaUuid } = data;
-            const matricula = await Matricula.findOneBy({
-                uuid: matriculaUuid,
-            });
-            if (!matricula) throw new NotFoundError("La matricula no existe");
+            const { descripcion, file, matriculaUuid } = data;
+            const nombreCortado = file.name.split(".");
+            const extension = nombreCortado[nombreCortado.length - 1];
 
-            const newCertificado = new Certificado();
-            newCertificado.uuid = uuid();
-            newCertificado.descripcion = descripcion;
-            newCertificado.url = await uploadImage(
-                undefined,
-                image,
-                "certificados"
+            const nombreTemp = uuid() + "." + extension;
+            const uploadPath = path.join(
+                __dirname,
+                "../../../uploads/",
+                nombreTemp
             );
-            newCertificado.matricula = matricula;
+            console.log(uploadPath);
+            file.mv(uploadPath, (err) => {
+                if (err) {
+                    throw err;
+                }
+                uploadFile(uploadPath, "tepsur");
+            });
+            // const matricula = await Matricula.findOneBy({
+            //     uuid: matriculaUuid,
+            // });
+            // if (!matricula) throw new NotFoundError("La matricula no existe");
 
-            await newCertificado.save();
+            // const newCertificado = new Certificado();
+            // newCertificado.uuid = uuid();
+            // newCertificado.descripcion = descripcion;
 
-            return newCertificado;
+            // newCertificado.url =
+            //     "aqui va la url del archivo guardado en azure :v";
+            // newCertificado.matricula = matricula;
+
+            // await newCertificado.save();
+
+            // return newCertificado;
+            return "true";
         } catch (error) {
             throw error;
         }

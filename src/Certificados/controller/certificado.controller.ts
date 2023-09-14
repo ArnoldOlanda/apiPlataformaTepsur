@@ -13,19 +13,19 @@ export class CertificadoController {
                 return;
             }
 
-            if (!req.files.image || Object.keys(req.files).length === 0) {
+            if (!req.files.file || Object.keys(req.files).length === 0) {
                 res.status(400).json({
                     msg: "No hay imagen para subir (image).",
                 });
                 return;
             }
-            const image = req.files.image as UploadedFile;
+            const file = req.files.file as UploadedFile;
             const { descripcion, matriculaUuid } = req.body;
 
             const certificado = await this.certificadoService.register({
                 descripcion,
                 matriculaUuid,
-                image,
+                file,
             });
             return res.json(certificado);
         } catch (error) {

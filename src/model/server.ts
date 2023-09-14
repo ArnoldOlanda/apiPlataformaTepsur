@@ -39,6 +39,7 @@ import certificadoRoutes from "../Certificados/routes/certificado.routes";
 import { swaggerCustomCss } from "../swagger-custom-styles";
 import { DataSource } from "typeorm";
 import { Paths } from "../interfaces/routePaths";
+import { uploadFile } from "../helpers/uploadFile";
 
 class Server implements ServerBase {
     cloudinary: any;
@@ -129,9 +130,10 @@ class Server implements ServerBase {
     }
 
     routes() {
-        // this.app.get("/", (_req, res) => {
-        //     res.send("index.html");
-        // });
+        this.app.get("/test", async (_req, _res) => {
+            // await uploadFile();
+            // res.json("ok");
+        });
 
         this.app.get(this.paths.index, (_req, res) => {
             res.json({ msg: "Server online..." });
