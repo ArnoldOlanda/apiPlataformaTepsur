@@ -27,33 +27,24 @@ export class CertificadoService implements CertificadoRepository {
                 "../../../uploads/",
                 nombreTemp
             );
-            console.log(uploadPath);
-            file.mv(uploadPath, (err) => {
-                if (err) {
-                    throw err;
-                }
-                uploadFile(uploadPath, "tepsur");
+            const matricula = await Matricula.findOneBy({
+                uuid: matriculaUuid,
             });
-            // const matricula = await Matricula.findOneBy({
-            //     uuid: matriculaUuid,
-            // });
-            // if (!matricula) throw new NotFoundError("La matricula no existe");
+            if (!matricula) throw new NotFoundError("La matricula no existe");
 
-            // const newCertificado = new Certificado();
-            // newCertificado.uuid = uuid();
-            // newCertificado.descripcion = descripcion;
+            const newCertificado = new Certificado();
+            newCertificado.uuid = uuid();
+            newCertificado.descripcion = descripcion;
 
-            // newCertificado.url = await uploadImage(
-            //     undefined,
-            //     file,
-            //     "certificados"
-            // );
-            // newCertificado.matricula = matricula;
+            file.mv(uploadPath, (err) => {
+                if (err) throw err;
+                newCertificado.url = uploadFile(uploadPath, "tepsur");
+            });
+            newCertificado.matricula = matricula;
 
-            // await newCertificado.save();
+            await newCertificado.save();
 
-            // return newCertificado;
-            return "true";
+            return newCertificado;
         } catch (error) {
             throw error;
         }

@@ -20,8 +20,9 @@ export const uploadFile = (tempFilePath: string, containerName: string) => {
         const nombreCortado = tempFilePath.split("\\");
         const blobName = nombreCortado[nombreCortado.length - 1];
         const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-        const response = blockBlobClient.uploadFile(tempFilePath);
+        blockBlobClient.uploadFile(tempFilePath);
         console.log("File uploaded to Azure");
+        return `https://bucket.blob.core.windows.net/tepsur/${blobName}`;
     } catch (error) {
         console.log(error);
         throw error;
