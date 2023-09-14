@@ -2,6 +2,6 @@ import fileUpload from "express-fileupload";
 
 export class CreateCertificadoDto {
     descripcion: string;
-    image: fileUpload.UploadedFile;
+    file: fileUpload.UploadedFile;
     matriculaUuid: string;
 }
