@@ -21,39 +21,39 @@ export class CertificadoService implements CertificadoRepository {
             const nombreCortado = file.name.split(".");
             const extension = nombreCortado[nombreCortado.length - 1];
 
-            // const nombreTemp = uuid() + "." + extension;
-            // const uploadPath = path.join(
-            //     __dirname,
-            //     "../../../uploads/",
-            //     nombreTemp
-            // );
-            // console.log(uploadPath);
-            // file.mv(uploadPath, (err) => {
-            //     if (err) {
-            //         throw err;
-            //     }
-            //     uploadFile(uploadPath, "tepsur");
-            // });
-            const matricula = await Matricula.findOneBy({
-                uuid: matriculaUuid,
-            });
-            if (!matricula) throw new NotFoundError("La matricula no existe");
-
-            const newCertificado = new Certificado();
-            newCertificado.uuid = uuid();
-            newCertificado.descripcion = descripcion;
-
-            newCertificado.url = await uploadImage(
-                undefined,
-                file,
-                "certificados"
+            const nombreTemp = uuid() + "." + extension;
+            const uploadPath = path.join(
+                __dirname,
+                "../../../uploads/",
+                nombreTemp
             );
-            newCertificado.matricula = matricula;
+            console.log(uploadPath);
+            file.mv(uploadPath, (err) => {
+                if (err) {
+                    throw err;
+                }
+                uploadFile(uploadPath, "tepsur");
+            });
+            // const matricula = await Matricula.findOneBy({
+            //     uuid: matriculaUuid,
+            // });
+            // if (!matricula) throw new NotFoundError("La matricula no existe");
 
-            await newCertificado.save();
+            // const newCertificado = new Certificado();
+            // newCertificado.uuid = uuid();
+            // newCertificado.descripcion = descripcion;
 
-            return newCertificado;
-            // return "true";
+            // newCertificado.url = await uploadImage(
+            //     undefined,
+            //     file,
+            //     "certificados"
+            // );
+            // newCertificado.matricula = matricula;
+
+            // await newCertificado.save();
+
+            // return newCertificado;
+            return "true";
         } catch (error) {
             throw error;
         }
