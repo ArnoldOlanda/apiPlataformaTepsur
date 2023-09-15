@@ -49,6 +49,9 @@ export class Alumno extends EntityBase {
     @Column({ default: true })
     estado: boolean;
 
+    @Column({ nullable: true })
+    foto: string;
+
     @OneToOne(() => Usuario, { nullable: true })
     @JoinColumn()
     usuario: Usuario;

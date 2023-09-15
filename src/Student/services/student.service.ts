@@ -14,6 +14,8 @@ import { ESTADO_MODULO_MATRICULA } from "../../interfaces/enums";
 import { MatriculaModulosModulo } from "../../Matricula/entity/MatriculaModulosModulo";
 import { PensionService } from "../../Pension/services/pension.service";
 import { AlreadyExistsError } from "../../errors/AlreadyExistsError";
+import fileUpload from "express-fileupload";
+import { uploadImage } from "../../helpers";
 
 export class StudentService implements StudentRepository {
     constructor(private readonly pensionService: PensionService) {}
@@ -218,8 +220,6 @@ export class StudentService implements StudentRepository {
                 edad,
             } = data;
 
-            // console.log("DIRECCION->", direccion);
-
             const alumno = await Alumno.createQueryBuilder("a")
                 .innerJoinAndSelect("a.grado_estudios", "g")
                 .innerJoinAndSelect("a.direccion", "d")
@@ -336,6 +336,25 @@ export class StudentService implements StudentRepository {
             newAlumno.usuario = newUserAlumno;
 
             return newAlumno;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    public uploadPhotoStudent = async (
+        uuid: string,
+        image: fileUpload.UploadedFile
+    ): Promise<Alumno> => {
+        try {
+            const alumno = await Alumno.findOneBy({ uuid });
+            if (!alumno) throw new NotFoundError("El alumno no existe");
+
+            alumno.foto = await uploadImage(undefined, image, "fotos_alumno");
+
+            await alumno.save();
+            await alumno.reload();
+
+            return alumno;
         } catch (error) {
             throw error;
         }
