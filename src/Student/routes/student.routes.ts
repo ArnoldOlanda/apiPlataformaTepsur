@@ -213,6 +213,42 @@ router.get("/check-email", [
     studentController.getIsValidEmail,
 ]);
 
+/**
+ * @swagger
+ * /student/update-info/{id}:
+ *  patch:
+ *      summary: Actualiza la informacion de un alumno
+ *      tags: [Student]
+ *      parameters:
+ *          - $ref: '#/components/parameters/token'
+ *          - in: query
+ *            name: id
+ *            schema:
+ *              type: string
+ *            required: true
+ *            description: El id del alumno
+ *      responses:
+ *          200:
+ *              description: Mensaje de verificacion
+ *              content:
+ *                  application/json:
+ *                       schema:
+ *                          type: object
+ *          403:
+ *              description: Mensaje de error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              msg:
+ *                                  type: string
+ *                              name:
+ *                                  type: string
+ *          500:
+ *              description: Error de servidor
+ *
+ */
 router.patch(
     "/update-info/:id",
     [
@@ -222,6 +258,50 @@ router.patch(
         validateFields,
     ],
     studentController.patchUpdateStudent
+);
+
+/**
+ * @swagger
+ * /student/upload-photo/{id}:
+ *  patch:
+ *      summary: Sube la foto de una alumno
+ *      tags: [Student]
+ *      parameters:
+ *          - $ref: '#/components/parameters/token'
+ *          - in: query
+ *            name: id
+ *            schema:
+ *              type: string
+ *            required: true
+ *            description: El id del alumno
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              multipart/form-data:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          image:
+ *                              type: string
+ *                              format: binary
+ *      responses:
+ *          200:
+ *              description: Mensaje de verificacion
+ *              content:
+ *                  application/json:
+ *                       schema:
+ *                          type: object
+ *          500:
+ *              description: Error de servidor
+ *
+ */
+router.patch(
+    "/upload-photo/:id",
+    [
+        validateJWT,
+        checkAuthRole([ROLES.ROOT, ROLES.ALUMNO, ROLES.ADMIN, ROLES.SECRE]),
+    ],
+    studentController.patchPhotoStudent
 );
 
 export default router;

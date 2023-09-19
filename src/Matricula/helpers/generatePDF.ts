@@ -11,6 +11,7 @@ export async function generatePDF({ url }: { url: string }) {
     let browser: Browser;
 
     if (!!argv.develop) {
+        console.log("Local");
         browser = await puppeteer.launch({
             headless: "new",
             defaultViewport: {
@@ -23,9 +24,10 @@ export async function generatePDF({ url }: { url: string }) {
             },
         });
     } else {
+        console.log("Production");
         browser = await puppeteer.connect({
             browserWSEndpoint:
-                "wss://browserless-production-cc28.up.railway.app/",
+                "wss://chrome.browserless.io?token=5f4769de-a21c-47fe-ac93-56cd15e85237",
             // headless: "new",
             defaultViewport: {
                 width: 500,
