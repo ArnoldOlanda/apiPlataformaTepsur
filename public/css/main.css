@@ -1,6 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
 * {
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -37,12 +38,12 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 table tr td {
-    padding: 5px 8px;
-    font-size: 15px;
+    padding: 2px 8px;
+    font-size: 13px;
 }
 
 table tr {
@@ -51,6 +52,11 @@ table tr {
 
 table tr td table {
     margin: 10px 0;
+}
+
+.header-table {
+    font-weight: 600;
+    background-color: gainsboro;
 }
 
 .firma-container {
