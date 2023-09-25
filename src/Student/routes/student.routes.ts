@@ -262,7 +262,7 @@ router.patch(
 
 /**
  * @swagger
- * /student/upload-photo/{id}:
+ * /student/upload-photo/{uuid}:
  *  patch:
  *      summary: Sube la foto de una alumno
  *      tags: [Student]
@@ -272,8 +272,9 @@ router.patch(
  *            name: id
  *            schema:
  *              type: string
+ *              format: uuid
  *            required: true
- *            description: El id del alumno
+ *            description: El uuid del alumno
  *      requestBody:
  *          required: true
  *          content:
@@ -296,10 +297,12 @@ router.patch(
  *
  */
 router.patch(
-    "/upload-photo/:id",
+    "/upload-photo/:uuid",
     [
         validateJWT,
         checkAuthRole([ROLES.ROOT, ROLES.ALUMNO, ROLES.ADMIN, ROLES.SECRE]),
+        param("uuid").isUUID(4),
+        validateFields,
     ],
     studentController.patchPhotoStudent
 );
