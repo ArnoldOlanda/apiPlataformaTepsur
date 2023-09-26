@@ -71,6 +71,7 @@ table tr td table {
 .firma-section {
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
 }
 
 .firma-container .firma {
