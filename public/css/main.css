@@ -75,6 +75,12 @@ table tr td table {
     justify-content: center;
 }
 
+.firma-container .foto-firma {
+    width: 180px;
+    height: 60px;
+    justify-content: center;
+}
+
 .firma:nth-child(2) {
     margin-top: 40px;
 }
