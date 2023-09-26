@@ -21,10 +21,10 @@
             </div>
             <table border="1">
                 <tr>
-                    <td><b>Apellido Paterno</b></td>
-                    <td><b>Apellido Materno</b></td>
-                    <td><b>Nombres</b></td>
-                    <td colspan="2"><b>Sexo</b></td>
+                    <td class="header-table">Apellido Paterno</td>
+                    <td class="header-table">Apellido Materno</td>
+                    <td class="header-table">Nombres</td>
+                    <td class="header-table" colspan="2">Sexo</td>
                 </tr>
                 <tr>
                     <td><%= alumno.ape_paterno %></td>
@@ -33,15 +33,15 @@
                     <td><%= alumno.sexo.toUpperCase() %></td>
                 </tr>
                 <tr>
-                    <td><b>Direccion: (Av,Jr,Calle)</b></td>
+                    <td class="header-table">Direccion: (Av,Jr,Calle)</td>
                     <td colspan="3">
                         <%= alumno.direccion.direccion_exacta %>
                     </td>
                 </tr>
                 <tr>
-                    <td><b>Distrito</b></td>
-                    <td><b>Provincia</b></td>
-                    <td colspan="2"><b>Departamento</b></td>
+                    <td class="header-table">Distrito</td>
+                    <td class="header-table">Provincia</td>
+                    <td class="header-table" colspan="2">Departamento</td>
                 </tr>
                 <tr>
                     <td><%= alumno.direccion.distrito %></td>
@@ -52,9 +52,9 @@
 
             <table border="1">
                 <tr>
-                    <td><b>Edad</b></td>
-                    <td><b>Grado instruccion</b></td>
-                    <td><b>Documento de identidad</b></td>
+                    <td class="header-table">Edad</td>
+                    <td class="header-table">Grado instruccion</td>
+                    <td class="header-table">Documento de identidad</td>
                 </tr>
                 <tr>
                     <td><%= alumno.edad %></td>
@@ -62,9 +62,9 @@
                     <td><%= alumno.dni %></td>
                 </tr>
                 <tr>
-                    <td><b>Lugar de residencia</b></td>
-                    <td><b>Celular</b></td>
-                    <td><b>Correo</b></td>
+                    <td class="header-table">Lugar de residencia</td>
+                    <td class="header-table">Celular</td>
+                    <td class="header-table">Correo</td>
                 </tr>
                 <tr>
                     <td><%= alumno.lugar_residencia || "-" %></td>
@@ -75,17 +75,17 @@
 
             <table border="1">
                 <tr>
-                    <td><b>Especializacion</b></td>
+                    <td class="header-table">Especializacion</td>
                     <td colspan="4"><%= especializacion.nombre %></td>
                 </tr>
                 <tr>
-                    <td><b>Sede</b></td>
+                    <td class="header-table">Sede</td>
                     <td colspan="5"><%= sede.nombre %></td>
                 </tr>
                 <tr>
-                    <td><b>Modalidad</b></td>
-                    <td><b>Horario</b></td>
-                    <td colspan="2"><b>Fecha inicio</b></td>
+                    <td class="header-table">Modalidad</td>
+                    <td class="header-table">Horario</td>
+                    <td class="header-table" colspan="2">Fecha inicio</td>
                 </tr>
                 <tr>
                     <td><%= modalidad %></td>
@@ -98,14 +98,14 @@
             </table>
             <table border="1" style="margin-top: 20px;"></table>
                 <tr>
-                    <td colspan="5"><b>Pago de matricula</b></td>
+                    <td class="header-table" colspan="5">Pago de matricula</td>
                 </tr>
                 <tr>
-                    <td><b>Nro comprobante</b></td>
-                    <td><b>Forma de pago</b></td>
-                    <td><b>Monto</b></td>
-                    <td><b>Fecha</b></td>
-                    <td><b>Hora</b></td>
+                    <td class="header-table">Nro comprobante</td>
+                    <td class="header-table">Forma de pago</td>
+                    <td class="header-table">Monto</td>
+                    <td class="header-table">Fecha</td>
+                    <td class="header-table">Hora</td>
                 </tr>
                 <% if (pagoMatricula) { %>
                 <tr>
@@ -129,16 +129,24 @@
                 </tr>
                 <% } %>
             </table>
-            <div>
-                <u>
-                    Fecha: <%= fecha_inscripcion %>
-                </u>
+            <div style="display: flex; flex-direction: column; font-size: 13px;">
+                <span> Fecha: <%= fecha_inscripcion %> </span>
+                <span>Responsable: <%= secretaria.nombres %></span>
+                <span>Sede: <%= sede.nombre %></span>
             </div>
 
             <div class="firma-container">
-                <div class="firma">Estudiante</div>
-                <div class="firma">Director</div>
-                <div class="firma">Coordinador</div>
+                <div class="firma-section">
+                    <div style="width: 180px; height: 80px;"></div>
+                    <div class="firma">Estudiante</div></div>
+                <div class="firma-section">
+                    <img class="foto-firma" src="<%= sede.firma_director %>"></img>
+                    <div class="firma">Director</div>
+                </div>
+                <div class="firma-section">
+                    <img class="foto-firma" src="<%= sede.firma_coordinador %>"></img>
+                    <div class="firma">Coordinador</div>
+                </div>
             </div>
         </div>
         <script>

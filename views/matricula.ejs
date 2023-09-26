@@ -156,8 +156,10 @@
                 </tr>
                 <% } %>
             </table>
-            <div>
-                <u> Fecha: <%= fecha_inscripcion %> </u>
+            <div style="display: flex; flex-direction: column; font-size: 13px;">
+                <span> Fecha: <%= fecha_inscripcion %> </span>
+                <span>Responsable: <%= secretaria.nombres %></span>
+                <span>Sede: <%= sede.nombre %></span>
             </div>
             <div class="firma-container">
                 <div class="firma-section">

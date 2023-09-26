@@ -759,6 +759,7 @@ export class MatriculaService implements MatriculaRepository {
             const data = await Matricula.createQueryBuilder("m")
                 .innerJoinAndSelect("m.carrera", "c")
                 .innerJoinAndSelect("m.alumno", "a")
+                .innerJoinAndSelect("m.secretaria", "se")
                 .innerJoinAndSelect("a.direccion", "d")
                 .innerJoinAndSelect("a.grado_estudios", "ge")
                 .innerJoinAndSelect("m.sede", "s")
