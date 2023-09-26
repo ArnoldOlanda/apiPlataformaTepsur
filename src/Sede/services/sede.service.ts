@@ -1,8 +1,12 @@
+import { UploadedFile } from "express-fileupload";
 import { Direccion } from "../../entity";
 import { DatabaseError } from "../../errors/DatabaseError";
+import { CreateSedeDto } from "../dto/createSede.dto";
 import { Sede } from "../entity/Sede.entity";
-import { SedeDTO, SedeRepository } from "../interfaces/sede.repository";
+import { SedeRepository } from "../interfaces/sede.repository";
 import { v4 as uuid } from "uuid";
+import { NotFoundError } from "../../errors/NotFoundError";
+import { uploadImage } from "../../helpers";
 
 export class SedeService implements SedeRepository {
     public listAll = async (): Promise<Sede[]> => {
@@ -21,6 +25,7 @@ export class SedeService implements SedeRepository {
             );
         }
     };
+
     public findById = async (uuid: string): Promise<Sede> => {
         try {
             const sede = await Sede.createQueryBuilder("s")
@@ -38,7 +43,11 @@ export class SedeService implements SedeRepository {
             throw error;
         }
     };
-    public register = async ({ nombre, direccion }: SedeDTO): Promise<Sede> => {
+
+    public register = async ({
+        nombre,
+        direccion,
+    }: CreateSedeDto): Promise<Sede> => {
         try {
             const newAddress = new Direccion();
             newAddress.uuid = uuid();
@@ -53,16 +62,49 @@ export class SedeService implements SedeRepository {
             newSede.nombre = nombre;
             newSede.direccion = savedAddress;
 
-            return await newSede.save();
+            return newSede.save();
         } catch (error) {
             console.log(error);
             throw new DatabaseError(
                 "No se pudo guardar el nuevo registro",
                 500,
-                ""
+                "Not created"
             );
         }
     };
+
+    public updateFirmas = async (
+        sedeUuid: string,
+        firmaCoordinador: UploadedFile,
+        firmaDirector: UploadedFile
+    ): Promise<Sede> => {
+        try {
+            const sede = await Sede.findOne({
+                where: { uuid: sedeUuid },
+                relations: {},
+            });
+            if (!sede) throw new NotFoundError("La sede no existe");
+
+            sede.firma_coordinador = await uploadImage(
+                sede.firma_coordinador,
+                firmaCoordinador,
+                "firmas"
+            );
+            sede.firma_director = await uploadImage(
+                sede.firma_director,
+                firmaDirector,
+                "firmas"
+            );
+
+            await sede.save();
+            await sede.reload();
+
+            return sede;
+        } catch (error) {
+            throw error;
+        }
+    };
+
     public delete = async (uuid: string): Promise<Sede> => {
         try {
             const sede = await Sede.findOneBy({ uuid, estado: "activo" });

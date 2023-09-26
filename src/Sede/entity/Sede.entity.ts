@@ -29,6 +29,12 @@ export class Sede extends EntityBase {
     @Column({ default: "activo" })
     estado: string;
 
+    @Column({ type: "varchar", nullable: true })
+    firma_coordinador: string | undefined;
+
+    @Column({ type: "varchar", nullable: true })
+    firma_director: string | undefined;
+
     @OneToOne(() => Direccion)
     @JoinColumn()
     direccion: Direccion;

@@ -196,6 +196,69 @@ router.post(
 
 /**
  * @swagger
+ * /sede/upload-firmas/{uuid}:
+ *  patch:
+ *      summary: subir las firmas para la ficha de matricula
+ *      tags: [Sede]
+ *      parameters:
+ *         - $ref: '#/components/parameters/token'
+ *         - in: path
+ *           name: uuid
+ *           required: true
+ *           schema:
+ *              type: string
+ *              format: uuid
+ *           description: Uuid de la sede
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              multipart/form-data:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          firmaCoordinador:
+ *                              type: string
+ *                              format: binary
+ *                              description: Imagen de la firma del coordinador
+ *                          firmaDirector:
+ *                              type: string
+ *                              format: binary
+ *                              description: Imagen de la firma del director
+ *      responses:
+ *          200:
+ *              description: La nueva sede creada
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          $ref: '#/components/schemas/Sede'
+ *          401:
+ *              description: Token de autenticacion faltante
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              msg:
+ *                                  type: string
+ *                                  description: El error de autenticacion
+ *          500:
+ *              description: Error de servidor
+ *
+ */
+router.patch(
+    "/upload-firmas/:uuid",
+    [
+        validateJWT,
+        checkAuthRole([ROLES.ADMIN, ROLES.SECRE]),
+        param("uuid").isUUID(4),
+        validateFields,
+    ],
+    sedeController.patchFirmas
+);
+
+/**
+ * @swagger
  * /sede/{uuid}:
  *  delete:
  *      summary: Eliminar una sede (eliminacion logica)
